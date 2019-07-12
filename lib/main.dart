@@ -45,9 +45,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  double playProgress = 24;
   @override
   Widget build(BuildContext context) {
+    double componentWidth = MediaQuery.of(context).size.width / 1.2;
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -65,22 +67,76 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            new Card(
+              elevation: 20.0,
+              child: new Container(
+                width: componentWidth,
+                height: MediaQuery.of(context).size.height / 2.7,
+                child: Image.asset(
+                  'assets/images/one.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            new Text(
+              'Title',
+              style: new TextStyle(
+                color: Colors.black,
+              ),
+              textScaleFactor: 2.5,
+            ),
+            new Text(
+              'Author',
+              style: new TextStyle(
+                color: Colors.blueAccent,
+              ),
+              textScaleFactor: 1.2,
+            ),
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new IconButton(
+                    icon: new Icon(Icons.skip_previous),
+                    iconSize: 50.0,
+                    onPressed: null
+                ),
+                new IconButton(
+                    icon: new Icon(Icons.play_arrow),
+                    iconSize: 80.0,
+                    onPressed: null
+                ),
+                new IconButton(
+                    iconSize: 50.0,
+                    icon: new Icon(Icons.skip_next),
+                    onPressed: null
+                ),
+              ],
+            ),
+            new Container(
+              width: componentWidth,
+              child: new Text(
+                '00:00',
+                textAlign: TextAlign.end,
+                style: new TextStyle(color: Colors.black),
+              ),
+            ),
+            new Container(
+              width: componentWidth,
+              height: 100.0,
+              child: new Slider(
+                value: playProgress,
+                max: 100,
+                divisions: 100,
+                label: '0:00',
+                onChanged: (double value){
+                  setState(() {
+                    playProgress = value;
+                  });
+                },
+              ),
+            ),
           ],
         ),
       ),
