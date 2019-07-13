@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double playProgress = 24;
   @override
   Widget build(BuildContext context) {
-    double componentWidth = MediaQuery.of(context).size.width / 1.2;
+    double componentWidth = MediaQuery.of(context).size.width / 1.4;
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
               elevation: 20.0,
               child: new Container(
                 width: componentWidth,
-                height: MediaQuery.of(context).size.height / 2.7,
+                height: MediaQuery.of(context).size.height / 3,
                 child: Image.asset(
                   'assets/images/one.jpg',
                   fit: BoxFit.cover,
@@ -116,10 +116,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new Container(
               width: componentWidth,
-              child: new Text(
-                '00:00',
-                textAlign: TextAlign.end,
-                style: new TextStyle(color: Colors.black),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Text(
+                    '00:00',
+                    style: new TextStyle(color: Colors.black),
+                  ),
+                  new Text(
+                    '00:00',
+                    style: new TextStyle(color: Colors.black),
+                  ),
+                ],
               ),
             ),
             new Container(
