@@ -239,10 +239,6 @@ class _MyHomePageState extends State<MyHomePage> {
       configAudioPlayer();
       play();
     }
-    currentAudio = audioList[index];
-    audioPlayer.stop();
-    configAudioPlayer();
-    play();
   }
 
   Future play() async
