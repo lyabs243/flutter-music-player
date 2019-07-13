@@ -194,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 inactiveColor: Colors.grey,
                 max: (duration.inSeconds.toDouble() > 0)? duration.inSeconds.toDouble(): 0,
                 divisions: (duration.inSeconds.toInt() > 0)? duration.inSeconds.toInt() : 5,
-                label: '0:00',
+                label: describeDuration(position),
                 onChanged: (double value){
                   setState(() {
                     position = new Duration(seconds: value.toInt());
