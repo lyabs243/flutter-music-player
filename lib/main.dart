@@ -53,6 +53,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   AudioPlayer audioPlayer;
+  int index = 0;
   StreamSubscription positionSub;
   StreamSubscription stateSub;
   Duration position = new Duration(seconds: 0);
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   initState() {
     super.initState();
-    currentAudio = audioList[0];
+    currentAudio = audioList[index];
     configAudioPlayer();
   }
 
@@ -136,7 +137,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white,
                     iconSize: 50.0,
                     onPressed: (){
-
+                      setState(() {
+                        rewind();
+                      });
                     }
                 ),
                 new IconButton(
@@ -159,7 +162,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     iconSize: 50.0,
                     color: Colors.white,
                     onPressed: (){
-
+                      setState(() {
+                        forward();
+                      });
                     }
                 ),
               ],
@@ -203,10 +208,46 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void forward()
+  {
+    if(index == audioList.length - 1){
+      index = 0;
+    }
+    else{
+      index++;
+    }
+    currentAudio = audioList[index];
+    audioPlayer.stop();
+    configAudioPlayer();
+    play();
+  }
+
+  void rewind()
+  {
+    if(position > Duration(seconds: 3)){
+      audioPlayer.seek(0.0);
+    }
+    else{
+      if(index == 0){
+        index = audioList.length-1;
+      }
+      else{
+        index--;
+      }
+      currentAudio = audioList[index];
+      audioPlayer.stop();
+      configAudioPlayer();
+      play();
+    }
+    currentAudio = audioList[index];
+    audioPlayer.stop();
+    configAudioPlayer();
+    play();
+  }
+
   Future play() async
   {
     status = AudioPlayerState.PLAYING;
-    //await audioPlayer.seek((position != null)? position.inSeconds.toDouble() : 0);
     await audioPlayer.play(currentAudio.audioPath);
   }
 
