@@ -170,11 +170,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   new Text(
-                    '00:00',
+                    describeDuration(position),
                     style: new TextStyle(color: Colors.white),
                   ),
                   new Text(
-                    '00:00',
+                    describeDuration(duration),
                     style: new TextStyle(color: Colors.white),
                   ),
                 ],
@@ -214,6 +214,13 @@ class _MyHomePageState extends State<MyHomePage> {
   {
     status = AudioPlayerState.PAUSED;
     await audioPlayer.pause();
+  }
+  
+  String describeDuration(Duration d){
+    int seconds = d.inSeconds.toInt()%60;
+    int minutes = (d.inSeconds.toInt()/60).floor();
+    
+    return '$minutes:$seconds';
   }
 
   void configAudioPlayer(){
