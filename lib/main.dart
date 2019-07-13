@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,7 +46,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final assetsAudioPlayer = AssetsAudioPlayer();
   double playProgress = 24;
+  bool isPlay = false;
+  AssetsAudioPlayer _assetsAudioPlayer;
+  @override
+  initState() {
+    /*super.initState();
+    audioPlayer = new MusicFinder();*/
+    super.initState();
+    _assetsAudioPlayer = AssetsAudioPlayer();
+  }
+
+  @override
+  void dispose() {
+    _assetsAudioPlayer = null;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double componentWidth = MediaQuery.of(context).size.width / 1.4;
@@ -103,9 +121,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: null
                 ),
                 new IconButton(
-                    icon: new Icon(Icons.play_arrow),
+                    icon: new Icon((isPlay)? Icons.pause : Icons.play_arrow),
                     iconSize: 80.0,
-                    onPressed: null
+                    onPressed: (){
+                      setState(() {
+                        isPlay = !isPlay;
+                        _assetsAudioPlayer.open(
+                          AssetsAudio(
+                            asset: "one.mp3",
+                            folder: "assets/songs/",
+                          ),
+                        );
+                        _assetsAudioPlayer.playOrPause();
+                      });
+                    }
                 ),
                 new IconButton(
                     iconSize: 50.0,
