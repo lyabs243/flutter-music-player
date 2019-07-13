@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'audio.dart';
+import 'package:audioplayer/audioplayer.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,21 +51,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final assetsAudioPlayer = AssetsAudioPlayer();
-  double playProgress = 24;
-  bool isPlay = false;
-  AssetsAudioPlayer _assetsAudioPlayer;
+
+  AudioPlayer audioPlayer;
+  StreamSubscription positionSub;
+  StreamSubscription stateSub;
+  Duration position = new Duration(seconds: 0);
+  Duration duration = new Duration(seconds: 0);
+  AudioPlayerState status = AudioPlayerState.STOPPED;
+
+  List<Audio> audioList = [
+    new Audio('Audio 1', 'Author 1', 'assets/images/one.jpg', 'https://codabee.com/wp-content/uploads/2018/06/un.mp3'),
+    new Audio('Audio 2', 'Author 2', 'assets/images/two.jpg', 'https://codabee.com/wp-content/uploads/2018/06/deux.mp3'),
+  ];
+  Audio currentAudio;
+
   @override
   initState() {
-    /*super.initState();
-    audioPlayer = new MusicFinder();*/
     super.initState();
-    _assetsAudioPlayer = AssetsAudioPlayer();
+    currentAudio = audioList[0];
+    configAudioPlayer();
   }
 
   @override
   void dispose() {
-    _assetsAudioPlayer = null;
+    audioPlayer = null;
     super.dispose();
   }
 
@@ -96,20 +109,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: componentWidth,
                 height: MediaQuery.of(context).size.height / 3,
                 child: Image.asset(
-                  'assets/images/one.jpg',
+                  currentAudio.imagePath,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             new Text(
-              'Title',
+              currentAudio.title,
               style: new TextStyle(
                 color: Colors.white,
               ),
               textScaleFactor: 2.5,
             ),
             new Text(
-              'Author',
+              currentAudio.author,
               style: new TextStyle(
                 color: Colors.white,
               ),
@@ -119,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new IconButton(
-                    icon: new Icon(Icons.skip_previous),
+                    icon: new Icon(Icons.fast_rewind),
                     color: Colors.white,
                     iconSize: 50.0,
                     onPressed: (){
@@ -127,24 +140,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                 ),
                 new IconButton(
-                    icon: new Icon((isPlay)? Icons.pause : Icons.play_arrow),
+                    icon: new Icon((status == AudioPlayerState.PLAYING)? Icons.pause : Icons.play_arrow),
                     color: Colors.white,
                     iconSize: 80.0,
                     onPressed: (){
                       setState(() {
-                        isPlay = !isPlay;
-                        _assetsAudioPlayer.open(
-                          AssetsAudio(
-                            asset: "one.mp3",
-                            folder: "assets/songs/",
-                          ),
-                        );
-                        _assetsAudioPlayer.playOrPause();
+                        if(status == AudioPlayerState.PLAYING){
+                          pause();
+                        }
+                        else{
+                          play();
+                        }
                       });
                     }
                 ),
                 new IconButton(
-                    icon: new Icon(Icons.skip_next),
+                    icon: new Icon(Icons.fast_forward),
                     iconSize: 50.0,
                     color: Colors.white,
                     onPressed: (){
@@ -173,15 +184,15 @@ class _MyHomePageState extends State<MyHomePage> {
               width: componentWidth,
               height: 100.0,
               child: new Slider(
-                value: playProgress,
+                value: position.inSeconds.toDouble(),
                 activeColor: Colors.white,
                 inactiveColor: Colors.grey,
-                max: 100,
-                divisions: 100,
+                max: (duration.inSeconds.toDouble() > 0)? duration.inSeconds.toDouble(): 0,
+                divisions: (duration.inSeconds.toInt() > 0)? duration.inSeconds.toInt() : 5,
                 label: '0:00',
                 onChanged: (double value){
                   setState(() {
-                    playProgress = value;
+                    position = new Duration(seconds: value.toInt());
                   });
                 },
               ),
@@ -190,5 +201,46 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future play() async
+  {
+    status = AudioPlayerState.PLAYING;
+    //await audioPlayer.seek((position != null)? position.inSeconds.toDouble() : 0);
+    await audioPlayer.play(currentAudio.audioPath);
+  }
+
+  Future pause() async
+  {
+    status = AudioPlayerState.PAUSED;
+    await audioPlayer.pause();
+  }
+
+  void configAudioPlayer(){
+    audioPlayer = new AudioPlayer();
+    
+    positionSub = audioPlayer.onAudioPositionChanged.listen(
+        (pos) => setState(() => position = pos),
+    );
+
+    stateSub = audioPlayer.onPlayerStateChanged.listen((state){
+      status = state;
+      if(state == AudioPlayerState.PLAYING)
+      {
+        duration = audioPlayer.duration;
+      }
+    },
+    onDone: (){
+      setState(() {
+        position = new Duration(seconds: 0);
+        status = AudioPlayerState.STOPPED;
+      });
+    },
+    onError: (message){
+      print('Erreur: $message');
+      setState(() {
+        status = AudioPlayerState.STOPPED;
+      });
+    });
   }
 }
