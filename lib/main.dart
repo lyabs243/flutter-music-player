@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        accentTextTheme: TextTheme(body2: TextStyle(color: Colors.black)),
       ),
       home: MyHomePage(title: 'Flutter Music Player'),
     );
@@ -79,8 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        backgroundColor: Colors.grey[900],
         centerTitle: true,
       ),
+      backgroundColor: Colors.grey[800],
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
@@ -101,14 +104,14 @@ class _MyHomePageState extends State<MyHomePage> {
             new Text(
               'Title',
               style: new TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
               textScaleFactor: 2.5,
             ),
             new Text(
               'Author',
               style: new TextStyle(
-                color: Colors.blueAccent,
+                color: Colors.white,
               ),
               textScaleFactor: 1.2,
             ),
@@ -117,11 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 new IconButton(
                     icon: new Icon(Icons.skip_previous),
+                    color: Colors.white,
                     iconSize: 50.0,
-                    onPressed: null
+                    onPressed: (){
+
+                    }
                 ),
                 new IconButton(
                     icon: new Icon((isPlay)? Icons.pause : Icons.play_arrow),
+                    color: Colors.white,
                     iconSize: 80.0,
                     onPressed: (){
                       setState(() {
@@ -137,9 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                 ),
                 new IconButton(
-                    iconSize: 50.0,
                     icon: new Icon(Icons.skip_next),
-                    onPressed: null
+                    iconSize: 50.0,
+                    color: Colors.white,
+                    onPressed: (){
+
+                    }
                 ),
               ],
             ),
@@ -150,11 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   new Text(
                     '00:00',
-                    style: new TextStyle(color: Colors.black),
+                    style: new TextStyle(color: Colors.white),
                   ),
                   new Text(
                     '00:00',
-                    style: new TextStyle(color: Colors.black),
+                    style: new TextStyle(color: Colors.white),
                   ),
                 ],
               ),
@@ -164,6 +174,8 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 100.0,
               child: new Slider(
                 value: playProgress,
+                activeColor: Colors.white,
+                inactiveColor: Colors.grey,
                 max: 100,
                 divisions: 100,
                 label: '0:00',
