@@ -254,10 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   
   String describeDuration(Duration d){
-    int seconds = d.inSeconds.toInt()%60;
-    int minutes = (d.inSeconds.toInt()/60).floor();
-    
-    return '$minutes:$seconds';
+    return d.toString().split('.').first;
   }
 
   void configAudioPlayer(){
